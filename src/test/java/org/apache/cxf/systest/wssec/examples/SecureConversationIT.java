@@ -45,7 +45,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
 @RunAsClient
-public class SecureConversationTest
+public class SecureConversationIT
 {
   private static final String name = "saml";
   private static final String NAMESPACE = "http://www.example.org/contract/DoubleIt";
@@ -59,18 +59,8 @@ public class SecureConversationTest
     String resourcePath = "src/test/resources";
     WebArchive archive = ShrinkWrap
         .create(WebArchive.class, name + ".war")
-//        .addAsWebInfResource(new File(resourcePath + "/WEB-INF", "wsdl/SecurityService.wsdl"),
-//            "wsdl/SecurityService.wsdl")
-
-        // cxf impl required to extend STS impl
         .setManifest(new StringAsset("Manifest-Version: 1.0\n" + "Dependencies: org.apache.cxf,org.apache.ws.security,org.apache.cxf.impl\n"))
-
-        .addAsResource(new File(resourcePath, "DoubleItSecConv.wsdl"))
-
-        .addAsResource(new File(resourcePath, "bob.properties"))
-        .addAsResource(new File(resourcePath, "bob.jks"))
-        .addAsResource(new File(resourcePath, "alice.properties"))
-        .addAsResource(new File(resourcePath, "alice.jks"))
+        .addAsWebInfResource(new File(resourcePath, "DoubleItSecConv.wsdl"))
 
         .addClass(SamlCallbackHandler.class)
 
