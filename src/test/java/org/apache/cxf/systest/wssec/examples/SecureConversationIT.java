@@ -50,8 +50,18 @@ public class SecureConversationIT
   private static final String name = "saml";
   private static final String NAMESPACE = "http://www.example.org/contract/DoubleIt";
   private static final QName SERVICE_QNAME = new QName(NAMESPACE, "DoubleItService");
-  private static final String ENDPOINT_URL = "http://localhost:8080/" + name + "/DoubleItService";
+  private static final String ENDPOINT_URL = "http://" + getServerBindAddress() + ":" + getServerBindPort() + "/" + name + "/DoubleItService";
   private static final String WSDL_URL = ENDPOINT_URL + "?wsdl";
+
+  static String getServerBindAddress() {
+    String serverBindAddress = System.getProperty("jboss.bind.address");
+    return serverBindAddress == null || serverBindAddress.isEmpty() ? "localhost" : serverBindAddress;
+  }
+
+  static String getServerBindPort() {
+    String serverBindport = System.getProperty("jboss.bind.port");
+    return serverBindport == null || serverBindport.isEmpty() ? "8080" : serverBindport;
+  }
 
   @Deployment
   static WebArchive createDeployment() throws Exception {
@@ -71,9 +81,6 @@ public class SecureConversationIT
     archive.as(ZipExporter.class).exportTo(new File("/tmp", archive.getName()), true);
     return archive;
   }
-
-
-
 
   @Test
   public void testSecureConversation() throws Exception
